@@ -1,0 +1,21 @@
+﻿@model Contoso.Web.Areas.Admin.Models.OrderListViewModel
+
+@Html.HiddenFor(m => m.PageSize)
+@Html.HiddenFor(m => m.TotalPages)
+@Html.HiddenFor(m => m.CurrentPage)
+@Html.HiddenFor(m => m.SortField)
+@Html.HiddenFor(m => m.SortDirection)
+
+@{
+    foreach (var items in Model.OrderList)
+    {
+        <tr>
+            <td>@items.OrderId</td>
+            <td>@items.OrderDate.ToString("dd/MM/yyyy")</td>
+            <td>@items.Status</td>
+            <td>@Html.ActionLink(items.CustomerName, "OrderDetails", "Admin", new { Area = "Admin", orderId = items.OrderId }, null)</td>
+            <td>@items.Country</td>
+            <td>$@items.Total</td>
+        </tr>
+    }
+}

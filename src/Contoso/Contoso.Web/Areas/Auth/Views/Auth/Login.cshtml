@@ -1,0 +1,56 @@
+﻿@{
+    Layout = Layout = "~/Views/Shared/_LayoutLogin.cshtml";
+}
+@model Contoso.Web.Areas.Auth.Models.LoginModel
+
+
+<div class="container">
+
+    <div class="row" id="pwd-container">
+
+        <div class="login-content">
+            <section class="login-form">
+                @using (Html.BeginForm("Login", "Auth", new { Area="Auth" }, FormMethod.Post, new { @class = "form-horizontal", role = "login" }))
+                {
+                                    @Html.AntiForgeryToken()
+                    <img src="http://i.imgur.com/RcmcLv4.png" class="img-responsive" alt="" />
+
+
+                    <a href="@Url.Action("Index", "Customer", new {Area = "Customer"})" class="btn btn-lg btn-primary btn-block">Log in as customer</a>
+                    <p class="center" style="font-size: 20px; font-weight: 600; margin-top: 15px;">or</p>
+                    <p class="center" style="font-size: 20px; font-weight: 600;">Log in as admin</p>
+                    
+                    if (!string.IsNullOrWhiteSpace(ViewBag.Failure))
+                    {
+                        <label class="error">@ViewBag.Failure</label>
+                    }
+                    
+                    
+                    @Html.TextBoxFor(m => m.Email, new { @class = "form-control input-lg" , placeholder="Email"})
+                    @Html.PasswordFor(m => m.Password, new { @class = "form-control input-lg", placeholder = "Password"})
+
+                    <button type="submit" name="go" class="btn btn-lg btn-primary btn-block">Sign in</button>
+                    <div>
+                        <a href="#">Create account</a> or <a href="#">reset password</a>
+                    </div>
+
+                }
+            </section>
+        </div>
+
+    </div>
+
+    @*<p>
+            <a href="http://validator.w3.org/check?uri=http%3A%2F%2Fbootsnipp.com%2Fiframe%2FW00op" target="_blank"><small>HTML</small><sup>5</sup></a>
+        </p>*@
+
+
+</div>
+
+@section scripts{
+    <script type="text/javascript">
+
+
+
+    </script>
+}

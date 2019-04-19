@@ -1,0 +1,131 @@
+﻿@using Contoso.Web.Areas.Auth.Models
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - Contoso company</title>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+</head>
+<body>
+    <header>
+        <div class="header-title">
+            <div class="container container-fluid">
+                <div class="row">
+                    <div class="col-md-6">
+                        <a class="brand" href='#'>
+                            @*<img src='/images/artlogo.png' alt="Art Shop" width="300" height="65" />*@
+                            <img src="http://i.imgur.com/RcmcLv4.png" class="img-responsive" alt="">
+                        </a>
+                    </div>
+                    <div class="col-md-6">
+                        <ul class="nav-pills pull-right nav-auth">
+                            @if (WebSecurity.IsAuthenticated && Roles.IsUserInRole("Admin"))
+                            {
+                                <li><a href="#" class="icon-user">Hi @WebSecurity.CurrentUserName</a></li>
+                                <li><a href="@Url.Action("Logout", "Auth", new {Area = "Auth"})" class="icon-logout">Logout</a></li>
+                            }
+                            else
+                            {
+                                <li><a href="@Url.Action("Login", "Auth", new {Area = "Auth"})" class="icon-logout">Login</a></li>
+                            }
+
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </header>
+    <section>
+        <div class="container" id="content">
+
+            @RenderBody()
+        </div>
+    </section>
+<footer>
+    <div class="container">
+        <div class="col-md-12">
+            <div class="footer">&copy; @DateTime.Now.Year - Contoso, Inc.</div>
+        </div>
+    </div>
+</footer>
+
+@*Model template start*@
+    <!--Success Modal Templates-->
+    <div id="modal-success" class="modal modal-message modal-success fade" style="display: none;" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <i class="glyphicon glyphicon-check"></i>
+                </div>
+                <div class="modal-title">Success</div>
+                <div class="modal-body"></div>
+                <div class="modal-footer">
+                    <a href="#" class="btn btn-success callback-btn" data-dismiss="modal">OK</a>
+                </div>
+            </div> <!-- / .modal-content -->
+        </div> <!-- / .modal-dialog -->
+    </div>
+    <!--End Success Modal Templates-->
+    <!--Info Modal Templates-->
+    <div id="modal-info" class="modal modal-message modal-info fade" style="display: none;" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <i class="fa fa-envelope"></i>
+                </div>
+                <div class="modal-title">Alert</div>
+
+                <div class="modal-body"></div>
+                <div class="modal-footer">
+                    <a href="#" class="btn btn-info callback-btn" data-dismiss="modal">OK</a>
+                </div>
+            </div> <!-- / .modal-content -->
+        </div> <!-- / .modal-dialog -->
+    </div>
+    <!--End Info Modal Templates-->
+    <!--Danger Modal Templates-->
+    <div id="modal-danger" class="modal modal-message modal-danger fade" style="display: none;" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <i class="glyphicon glyphicon-fire"></i>
+                </div>
+                <div class="modal-title">Alert</div>
+
+                <div class="modal-body"></div>
+                <div class="modal-footer">
+                    <a href="#" class="btn btn-danger callback-btn" data-dismiss="modal">OK</a>
+                </div>
+            </div> <!-- / .modal-content -->
+        </div> <!-- / .modal-dialog -->
+    </div>
+    <!--End Danger Modal Templates-->
+    <!--Danger Modal Templates-->
+    <div id="modal-warning" class="modal modal-message modal-warning fade" style="display: none;" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <i class="fa fa-warning"></i>
+                </div>
+                <div class="modal-title">Warning</div>
+
+                <div class="modal-body"></div>
+                <div class="modal-footer">
+                    <a href="#" class="btn btn-warning callback-btn" data-dismiss="modal">OK</a>
+                </div>
+            </div> <!-- / .modal-content -->
+        </div> <!-- / .modal-dialog -->
+    </div>
+    <!--End Danger Modal Templates-->
+    @*Modal template end*@
+
+@Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/bundles/bootstrap")
+    @Scripts.Render("~/bundles/app")
+    @RenderSection("scripts", required: false)
+</body>
+</html>

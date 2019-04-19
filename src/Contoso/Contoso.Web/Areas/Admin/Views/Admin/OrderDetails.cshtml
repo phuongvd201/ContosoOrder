@@ -1,0 +1,112 @@
+﻿@model Contoso.Web.Areas.Admin.Models.OrderDetailsViewModel
+
+<div class="row">
+    <h2 class="center">Order #@Model.Order.OrderId</h2>
+
+    <div class="col-md-12" style="padding-bottom: 30px;">
+        <h4 style="display: inline;">Status : @Model.Order.Status</h4>
+        
+        <h4 style="display: inline;text-align: right; float: right;">
+            Order Date : @Model.Order.OrderDate.ToString("yyyy/MM/dd")</h4>
+
+    </div>
+
+    <div class="col-md-12">
+        <fieldset style="font-size: 15px;">
+            <legend>Customer Infomation</legend>
+
+            <div class="row">
+                <label class="col-md-1">Name: </label>
+                <div class="col-md-5">@Model.Customer.Name</div>
+
+                <label class="col-md-1">Email: </label>
+                <div class="col-md-5">@Model.Customer.Email</div>
+            </div>
+            <div class="row">
+                <label class="col-md-1">Address:</label>
+                <div class="col-md-5">@Model.Customer.Address</div>
+                <div class="col-md-6">
+                    <div class="row ">
+                        <label class="col-md-2">Phone: </label>
+                        <div class="col-md-10">
+                            @Model.Customer.Phone
+                        </div>
+                    </div>
+                    <div class="row">
+                        <label class="col-md-2">Country: </label>
+                        <div class="col-md-10">
+                            @Model.Customer.Country
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+    </div>
+
+    <div class="col-md-12">
+        <fieldset style="margin-top:20px">
+            <legend>Order Details</legend>
+            <div class="table-responsive" id="orderDetaits">
+
+                <table class="table table-hover table-bordered tbNewOrder" style="width: 100%">
+                    <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Product</th>
+                        <th>Quantity</th>
+                        <th>Unit Price</th>
+                        <th>Total</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    @{
+                        if (Model.OrderDetailInfos != null && Model.OrderDetailInfos.Count > 0)
+                        {
+                            for (int i = 0; i < Model.OrderDetailInfos.Count; i++)
+                            {
+                                <tr>
+                                    <th>@(i+1)</th>
+                                    <th>@Model.OrderDetailInfos[i].ProductName</th>
+                                    <th>@Model.OrderDetailInfos[i].Quantity</th>
+                                    <th>$@Model.OrderDetailInfos[i].Price</th>
+                                    <th>$@Model.OrderDetailInfos[i].Total</th>
+                                </tr>
+                            }
+                        }
+                    }
+
+                    </tbody>
+                </table>
+            </div>
+        </fieldset>
+        <div class="row" style="text-align: center; margin-top: 10px">
+            
+            @{
+                if ("New".Equals(Model.Order.Status))
+                {
+                    <button type="button" id="btnApprove" class="btn btn-primary btn-lg">Approve</button>
+                    <button type="button" id="btnReject" class="btn btn-primary btn-lg">Reject</button>
+                }
+            }
+            <button type="button" id="btnBack" class="btn btn-primary btn-lg">Back</button>     
+            
+        </div>
+    </div>
+</div>
+
+@section scripts
+{
+    <script type="text/javascript">
+        $('#btnBack').on("click", function() {
+            window.location.href = '@Url.Action("Index", "Admin", new { Area=  "Admin" } )';
+        });
+        $('#btnApprove').on("click", function() {
+            window.location.href = '@Url.Action("Approve", "Admin", new { Area = "Admin", orderId = Model.Order.OrderId })';
+        });
+        $('#btnReject').on("click", function () {
+            window.location.href = '@Url.Action("Reject", "Admin", new { Area = "Admin", orderId = Model.Order.OrderId })';
+        });
+
+
+    </script>
+}

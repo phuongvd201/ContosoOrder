@@ -1,0 +1,190 @@
+﻿@model Contoso.Web.Areas.Admin.Models.OrderListViewModel
+
+<div class="row">
+    <h2 class="center">Order management</h2>
+    <table class="table table-hover table-responsive" id="tbOrders" style="width: 100%">
+        <thead class ="header-sorting">
+            <tr>
+                <th class="col-md-1">ID</th>
+                <th class="col-md-2 sorting" data-sortfield="OrderDate" >Order Date</th>
+                <th class="col-md-1">Status</th>
+                <th class="col-md-3 sorting" data-sortfield="CustomerName">Customer</th>
+                <th class="col-md-2">Country</th>
+                <th class="col-md-2">Total</th>
+            </tr>
+        </thead>
+
+        <tbody>
+
+            @if (Model == null || Model.OrderList == null || !Model.OrderList.Any())
+            {
+                <tr><td>No order</td></tr>
+            }
+            else
+            {
+                Html.RenderPartial("_OrderListPaging", Model);
+            }
+
+        </tbody>
+        <tfoot>
+
+        </tfoot>
+    </table>
+
+    @if (Model != null && Model.OrderList != null && Model.OrderList.Any())
+    {
+        <div class="paging" style="float: right">
+            <nav>
+                <ul class="pagination">
+                    <li>
+                        <a href="#" id="prePage" aria-label="Previous">
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
+                    </li>
+                    @for (var i = 1; i <= Model.TotalPages; i++)
+                    {
+                        <li><a href="#" id="page-@i">@i</a></li>
+                    }
+                    <li>
+                        <a href="#" id="nextPage" aria-label="Next">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    }
+</div>
+
+@section scripts
+{
+    <script type="text/javascript">
+
+        var Paging = (function() {
+
+            var totalPages = parseInt('@ViewBag.TotalPages');
+            var currentPage = 1;
+
+            $('#page-1').closest('li').addClass("active");
+
+            var _setActivePage = function(pageEle) {
+                if (currentPage === 1) {
+                    $('#prePage').closest('li').addClass("disabled");
+                } else {
+                    $('#prePage').closest('li').removeClass("disabled");
+                }
+                if (currentPage === totalPages) {
+                    $('#nextPage').closest('li').addClass("disabled");
+                } else {
+                    $('#nextPage').closest('li').removeClass("disabled");
+                }
+
+                $(".paging").find('li').not(pageEle).removeClass("active");
+                pageEle.closest('li').addClass("active");
+            }
+
+            $('.paging a[id^="page-"]').on("click", function(event) {
+
+                currentPage = parseInt($(this).text());
+                moveToPage(currentPage);
+                _setActivePage($(this));
+
+                return false;
+            });
+
+            $('#prePage').on("click", function() {
+
+                if (currentPage > 1) {
+                    moveToPage(--currentPage);
+
+                    $(".paging").find('li').removeClass("active");
+                    $('#page-' + currentPage).closest('li').addClass("active");
+                }
+
+                return false;
+            });
+
+            $('#nextPage').on("click", function() {
+                if (currentPage < totalPages) {
+                    moveToPage(++currentPage);
+
+                    $(".paging").find('li').removeClass("active");
+                    $('#page-' + currentPage).closest('li').addClass("active");
+                }
+
+                return false;
+            });
+
+
+            var moveToPage = function(page) {
+                var urlViewOrdersPaging = '@Url.Action("GetViewOrderPaging", "Admin", new {Area = "Admin"})';
+                callAjaxPost(urlViewOrdersPaging, { page: page, sortField: Sorting.getSortField(), sortDirection: Sorting.getSortDirection() },
+                    function(response) {
+                        $('#tbOrders tbody').html(response);
+                    },
+                    function(error) {
+                        //TODO: Error
+                    }
+                );
+            }
+
+            return {
+                getCurrentPage: function() {
+                    return currentPage;
+                },
+                getTotalPage: function() {
+                    return totalPages;
+                },
+                moveToPage: moveToPage
+            };
+
+        })();
+
+        var Sorting = (function() {
+
+            var sortField = "CustomerName"; // default sort field
+            var sortDirection = "asc";      // default sort direction
+
+
+            $('#tbOrders .sorting').on("click", function() {
+                var _this = this;
+                var _sortField = $(this).data("sortfield");
+
+                if (_sortField === sortField) {
+                    sortDirection = sortDirection === 'asc' ? "desc" : "asc";
+                } else sortDirection = "asc";
+
+                sortField = _sortField;
+
+                var urlViewOrdersPaging = '@Url.Action("GetViewOrderPaging", "Admin", new {Area = "Admin"})';
+                callAjaxPost(urlViewOrdersPaging, {
+                    page: Paging.getCurrentPage(),
+                    sortField: sortField,
+                    sortDirection: sortDirection
+                },
+                function (response) {
+                    $('#tbOrders tbody').html(response);
+                    $(".sorting").removeClass("asc desc");
+                    $(_this).addClass(sortDirection);
+
+                },
+                function (error) {
+                    //TODO: Error
+                });
+            });
+
+            return {
+                getSortField: function() {
+                    return sortField;
+                },
+                getSortDirection: function() {
+                    return sortDirection;
+                }
+            }
+
+
+        })();
+
+
+    </script>
+}

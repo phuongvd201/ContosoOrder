@@ -1,0 +1,7 @@
+PROJECT CONTOSO COMPANY
+
+CREATOR: PHUONGVD
+CREATE DATE : 2016/06/26
+
+Login : phuongvd@contoso.com/secret123
+
